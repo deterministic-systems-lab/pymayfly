@@ -96,7 +96,7 @@ class IPTEnforcer:
     Example::
 
         enforcer = IPTEnforcer(
-            broker=VaultBroker(url=VAULT_ADDR, token=VAULT_TOKEN),
+            broker=AWSSTSBroker(role_arn="arn:aws:iam::123456789012:role/IPTProcessor"),
             ledger=FileAuditLedger("/var/log/mayfly/audit.jsonl"),
         )
 

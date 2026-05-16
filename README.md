@@ -27,7 +27,6 @@ IPT model:           compromised key → single S3 object key (now deleted)
 
 ```bash
 pip install pymayfly[aws]     # AWS STS backend (FedRAMP-suitable)
-pip install pymayfly[vault]   # HashiCorp Vault (platform-agnostic, v0.2.0)
 pip install pymayfly          # core only — bring your own provider
 ```
 
@@ -36,6 +35,8 @@ pip install pymayfly          # core only — bring your own provider
 ### Decorator (AWS Lambda)
 
 ```python
+import boto3
+
 from pymayfly import IPTEnforcer, AWSSTSBroker, FileAuditLedger
 
 enforcer = IPTEnforcer(
@@ -57,7 +58,11 @@ def handler(event, context, *, creds):
         aws_secret_access_key=creds.token["SecretAccessKey"],
         aws_session_token=creds.token["SessionToken"],
     )
-    data = s3.get_object(Bucket="dirty-zone", Key=event["Records"][0]["s3"]["object"]["key"])
+    record = event["Records"][0]
+    bucket = record["s3"]["bucket"]["name"]
+    key = record["s3"]["object"]["key"]
+
+    data = s3.get_object(Bucket=bucket, Key=key)
     # process, de-identify, write to clean zone
     # delete source object → credential now points at nothing
 ```
@@ -67,9 +72,13 @@ def handler(event, context, *, creds):
 ```python
 from pymayfly import transaction_scope, AWSSTSBroker
 
-broker = AWSSTSBroker(role_arn="arn:aws:iam::123:role/IPTProcessor")
+broker = AWSSTSBroker(role_arn="arn:aws:iam::123456789012:role/IPTProcessor")
 
-with transaction_scope(broker, resource="arn:aws:s3:::bucket/patient-001.parquet", action="read") as creds:
+with transaction_scope(
+    broker,
+    resource="arn:aws:s3:::bucket/patient-001.parquet",
+    action="read",
+) as creds:
     # creds scoped to exactly this object
     process(creds)
 # creds revoked (or expired) here
@@ -79,9 +88,9 @@ with transaction_scope(broker, resource="arn:aws:s3:::bucket/patient-001.parquet
 
 | Provider | Install | Platform | Revocation | Regulated Use |
 |---|---|---|---|---|
-| `AWSSTSBroker` | `ipt[aws]` | AWS | TTL only (900s min) | ✓ FedRAMP / HIPAA |
-| `VaultBroker` | `ipt[vault]` | Any | ✓ Explicit | ✓ Any |
-| `SupabaseJWTBroker` | `ipt[supabase]` | Postgres | ✓ Blocklist | Dev / test only |
+| `AWSSTSBroker` | `pymayfly[aws]` | AWS | TTL only (900s min) | FedRAMP / HIPAA |
+| `VaultBroker` | Planned for 0.2.0 | Any | Explicit | Any |
+| `SupabaseJWTBroker` | Planned for 0.2.0 | Postgres | Blocklist | Dev / test only |
 
 ## Security Properties
 
@@ -110,7 +119,8 @@ class MyBroker(IdentityBroker):
         ...
 ```
 
-See [docs/providers.md](docs/providers.md) for a full walkthrough.
+See [docs/providers.md](docs/providers.md) for a provider walkthrough and
+`pymayfly/providers/aws_sts.py` for a complete implementation.
 
 ## Research
 

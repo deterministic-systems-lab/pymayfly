@@ -2,9 +2,11 @@
 Identity broker interface for the Identity-Per-Transaction protocol.
 
 Every provider must implement IdentityBroker. The library ships with:
-  - AWSSTSBroker  (ipt[aws])
-  - VaultBroker   (ipt[vault])  -- v0.2.0
-  - SupabaseJWTBroker (ipt[supabase]) -- v0.2.0
+  - AWSSTSBroker (pymayfly[aws])
+
+Planned providers:
+  - VaultBroker
+  - SupabaseJWTBroker
 """
 
 from __future__ import annotations

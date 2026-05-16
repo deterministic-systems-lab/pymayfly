@@ -17,12 +17,12 @@ Security guarantee:
 Revocation:
     AWS STS does not support explicit credential revocation. The
     minimum TTL is 900 seconds. For pipelines that require immediate
-    revocation, use VaultBroker (ipt[vault]) instead.
+    revocation, use a provider with revocable leases.
 
 FedRAMP:
     This provider is suitable for FedRAMP Moderate and High
     environments when the assumed role and trust policy are
-    correctly scoped. See docs/fedramp.md for IAM configuration.
+    correctly scoped. See docs/fedramp.md for IAM configuration guidance.
 """
 
 from __future__ import annotations
@@ -87,7 +87,7 @@ class AWSSTSBroker(IdentityBroker):
         if ttl < 900:
             raise ValueError(
                 f"STS minimum TTL is 900 seconds. Got {ttl}. "
-                "For shorter TTLs, use VaultBroker (ipt[vault])."
+                "For shorter TTLs, use a provider with revocable leases."
             )
 
         self._role_arn = role_arn

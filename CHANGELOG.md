@@ -15,7 +15,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `AuditLedger` ABC
 - `ConsoleAuditLedger` — stdout JSONL, zero deps
 - `FileAuditLedger` — append-only JSONL file, zero deps
-- `AWSSTSBroker` — STS-backed provider (`ipt[aws]`)
+- `AWSSTSBroker` — STS-backed provider (`pymayfly[aws]`)
 - Full exception hierarchy (`IPTError`, `IPTBrokerError`, etc.)
 - Unit test suite with `MockBroker` (zero cloud deps)
 

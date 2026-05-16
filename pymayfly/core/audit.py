@@ -7,8 +7,8 @@ The library ships with:
   - FileAuditLedger     (append-only JSONL, zero deps)
 
 Provider-specific ledgers:
-  - SupabaseAuditLedger (ipt[supabase]) -- v0.2.0
-  - CloudWatchAuditLedger (ipt[aws])    -- v0.2.0
+  - SupabaseAuditLedger -- planned
+  - CloudWatchAuditLedger -- planned
 """
 
 from __future__ import annotations
