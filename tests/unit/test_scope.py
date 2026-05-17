@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from pymayfly.core.audit import FileAuditLedger
@@ -55,11 +57,23 @@ def test_scope_writes_to_file_ledger(broker, tmp_path):
     with transaction_scope(broker, "s3://bucket/key", "read", ledger=ledger):
         pass
 
-    lines = log_file.read_text().strip().split("\n")
+    lines = log_file.read_text(encoding="utf-8").strip().split("\n")
     # open + close = 2 records
     assert len(lines) == 2
     assert '"OPEN"' in lines[0]
     assert '"CLOSE"' in lines[1]
+
+
+def test_scope_file_ledger_reads_jsonl_as_utf8(broker, tmp_path):
+    log_file = tmp_path / "audit.jsonl"
+    ledger = FileAuditLedger(log_file)
+    resource = "s3://bucket/patient-\u00e9"
+
+    with transaction_scope(broker, resource, "read", ledger=ledger):
+        pass
+
+    first_record = json.loads(log_file.read_text(encoding="utf-8").splitlines()[0])
+    assert first_record["resource"] == resource
 
 
 def test_scope_records_failure_in_ledger(broker, tmp_path):
@@ -70,6 +84,6 @@ def test_scope_records_failure_in_ledger(broker, tmp_path):
         with transaction_scope(broker, "s3://bucket/key", "read", ledger=ledger):
             raise RuntimeError("downstream failure")
 
-    lines = log_file.read_text().strip().split("\n")
+    lines = log_file.read_text(encoding="utf-8").strip().split("\n")
     assert '"OPEN"' in lines[0]
     assert '"FAIL"' in lines[1]

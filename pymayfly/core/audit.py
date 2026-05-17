@@ -106,5 +106,5 @@ class FileAuditLedger(AuditLedger):
 
     def _append(self, event: str, record: ProvenanceRecord) -> None:
         entry = {"event": event, "sha256": record.sha256(), **record.to_dict()}
-        with self._path.open("a") as f:
+        with self._path.open("a", encoding="utf-8") as f:
             f.write(json.dumps(entry) + "\n")
