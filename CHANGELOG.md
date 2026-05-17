@@ -20,8 +20,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Unit test suite with `MockBroker` (zero cloud deps)
 
 ### Planned for 0.2.0
-- `VaultBroker` — HashiCorp Vault (`ipt[vault]`)
-- `SupabaseJWTBroker` — JWT + RLS (`ipt[supabase]`)
+- `VaultBroker` — HashiCorp Vault
+- `SupabaseJWTBroker` — JWT + RLS
 - `SupabaseAuditLedger`
 - `CloudWatchAuditLedger`
 - GitHub Actions CI
