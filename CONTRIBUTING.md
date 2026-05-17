@@ -27,7 +27,7 @@ Run the same checks as CI before opening a pull request:
 ```bash
 python -m ruff check pymayfly tests
 python -m mypy pymayfly
-python -m pytest tests/unit/ -v --cov=pymayfly --cov-report=term-missing
+python -m pytest tests/unit tests/integration -v --cov=pymayfly --cov-report=term-missing
 python -m hatchling build
 python -m twine check dist/*
 ```

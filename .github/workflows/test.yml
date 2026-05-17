@@ -34,4 +34,4 @@ jobs:
         run: mypy pymayfly
 
       - name: Test
-        run: pytest tests/unit/ -v --cov=pymayfly --cov-report=term-missing
+        run: pytest tests/unit tests/integration -v --cov=pymayfly --cov-report=term-missing
