@@ -3,6 +3,13 @@
 All notable changes to pymayfly are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+- `AzureBlobBroker`: Azure Blob Storage provider issuing a short-lived,
+  AAD-signed User Delegation SAS scoped to a single blob. Install with
+  `pip install pymayfly[azure]`.
+
 ## [0.1.0] - 2026-05-15
 
 ### Added

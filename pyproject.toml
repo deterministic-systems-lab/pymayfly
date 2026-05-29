@@ -42,12 +42,15 @@ dependencies = []
 
 [project.optional-dependencies]
 aws = ["boto3>=1.26"]
+azure = ["azure-identity>=1.12", "azure-storage-blob>=12.14"]
 dev = [
   "pytest>=7.0",
   "pytest-cov>=4.0",
   "ruff>=0.4",
   "mypy>=1.0",
   "moto[s3,sts]>=5.0",
+  "azure-identity>=1.12",
+  "azure-storage-blob>=12.14",
   "hatchling",
 ]
 
