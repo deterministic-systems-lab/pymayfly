@@ -3,6 +3,13 @@
 All notable changes to pymayfly are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+- `GCSBroker`: Google Cloud Storage provider issuing downscoped, single-object
+  credentials via service-account impersonation plus a Credential Access
+  Boundary. Install with `pip install pymayfly[gcp]`.
+
 ## [0.1.0] - 2026-05-15
 
 ### Added

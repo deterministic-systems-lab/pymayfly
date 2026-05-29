@@ -27,6 +27,7 @@ IPT model:           compromised key → single S3 object key (now deleted)
 
 ```bash
 pip install pymayfly[aws]     # AWS STS backend (FedRAMP-suitable)
+pip install pymayfly[gcp]     # GCS backend (impersonation + downscoped tokens)
 pip install pymayfly          # core only — bring your own provider
 ```
 
@@ -89,6 +90,7 @@ with transaction_scope(
 | Provider | Install | Platform | Revocation | Regulated Use |
 |---|---|---|---|---|
 | `AWSSTSBroker` | `pymayfly[aws]` | AWS | TTL only (900s min) | FedRAMP / HIPAA |
+| `GCSBroker` | `pymayfly[gcp]` | GCP / GCS | TTL only | FedRAMP / HIPAA |
 | `VaultBroker` | Planned for 0.2.0 | Any | Explicit | Any |
 | `SupabaseJWTBroker` | Planned for 0.2.0 | Postgres | Blocklist | Dev / test only |
 
