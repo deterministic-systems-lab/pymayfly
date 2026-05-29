@@ -43,6 +43,7 @@ dependencies = []
 [project.optional-dependencies]
 aws = ["boto3>=1.26"]
 azure = ["azure-identity>=1.12", "azure-storage-blob>=12.14"]
+gcp = ["google-auth>=2.0", "requests>=2.0"]
 dev = [
   "pytest>=7.0",
   "pytest-cov>=4.0",
@@ -51,6 +52,8 @@ dev = [
   "moto[s3,sts]>=5.0",
   "azure-identity>=1.12",
   "azure-storage-blob>=12.14",
+  "google-auth>=2.0",
+  "requests>=2.0",
   "hatchling",
 ]
 
@@ -76,6 +79,12 @@ select = ["E", "F", "I", "UP"]
 python_version = "3.11"
 strict = true
 ignore_missing_imports = true
+
+# google-auth ships py.typed but leaves many public constructors unannotated,
+# which trips strict's disallow_untyped_calls. Treat it as untyped (like boto3).
+[[tool.mypy.overrides]]
+module = ["google.*"]
+follow_imports = "skip"
 
 [tool.hatch.build.targets.wheel]
 packages = ["pymayfly"]

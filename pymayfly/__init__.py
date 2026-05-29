@@ -52,6 +52,10 @@ def __getattr__(name: str) -> object:
         from .providers.azure_blob import AzureBlobBroker
 
         return AzureBlobBroker
+    if name == "GCSBroker":
+        from .providers.gcs import GCSBroker
+
+        return GCSBroker
     raise AttributeError(f"module 'pymayfly' has no attribute {name!r}")
 
 
@@ -70,6 +74,7 @@ __all__ = [
     # Providers (lazy)
     "AWSSTSBroker",
     "AzureBlobBroker",
+    "GCSBroker",
     # Exceptions
     "IPTError",
     "IPTBrokerError",

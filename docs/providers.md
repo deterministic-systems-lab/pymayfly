@@ -67,11 +67,18 @@ The built-in `AzureBlobBroker` issues an AAD-signed User Delegation SAS scoped t
 a single blob. It obtains a user delegation key from the blob service and then
 calls `generate_blob_sas(...)` to mint a SAS pinned to one container/blob, one
 permission set, and a short expiry.
+## GCS Provider
+
+The built-in `GCSBroker` issues a downscoped Google Cloud Storage access token
+scoped to a single object. It impersonates a service account (setting the token
+TTL) and then applies a Credential Access Boundary pinned to one object and one
+role.
 
 Install it with:
 
 ```bash
 pip install pymayfly[azure]
+pip install pymayfly[gcp]
 ```
 
 Example:
@@ -103,6 +110,36 @@ raises `IPTScopeError`. Credentials expire 15 minutes after issuance (the defaul
 `ttl=900`). Like AWS STS and GCS, an individual SAS cannot be revoked — revoking
 the user delegation key is account-wide — so `revoke()` is a no-op and the TTL is
 the backstop.
+from google.oauth2.credentials import Credentials
+from google.cloud import storage
+
+from pymayfly import GCSBroker, transaction_scope
+
+broker = GCSBroker(target_principal="ipt@my-project.iam.gserviceaccount.com")
+
+with transaction_scope(
+    broker,
+    resource="gs://my-bucket/path/to/object.parquet",
+    action="read",
+) as creds:
+    client = storage.Client(
+        credentials=Credentials(token=creds.token["access_token"])
+    )
+    ...
+```
+
+The example uses `google-cloud-storage`, which is a separate install
+(`pip install google-cloud-storage`); the `pymayfly[gcp]` extra installs only the
+credential libraries (`google-auth`, `requests`). `creds.token["access_token"]`
+is a plain bearer token usable with any GCS client.
+
+Actions map to predefined storage roles (`read` -> `roles/storage.objectViewer`,
+`write` -> `roles/storage.objectCreator`, `delete` -> `roles/storage.objectUser`);
+any other value is treated as a literal role. `delete` maps to `objectUser`
+because GCS has no delete-only predefined role — it also grants read/create on
+that one object (still bounded to the single object by the access boundary).
+Like AWS STS, GCS downscoped tokens cannot be explicitly revoked, so `revoke()`
+is a no-op and the TTL is the backstop.
 
 ## Provider Checklist
 
