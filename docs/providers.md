@@ -61,6 +61,12 @@ with transaction_scope(
     ...
 ```
 
+## Azure Blob Provider
+
+The built-in `AzureBlobBroker` issues an AAD-signed User Delegation SAS scoped to
+a single blob. It obtains a user delegation key from the blob service and then
+calls `generate_blob_sas(...)` to mint a SAS pinned to one container/blob, one
+permission set, and a short expiry.
 ## GCS Provider
 
 The built-in `GCSBroker` issues a downscoped Google Cloud Storage access token
@@ -71,12 +77,39 @@ role.
 Install it with:
 
 ```bash
+pip install pymayfly[azure]
 pip install pymayfly[gcp]
 ```
 
 Example:
 
 ```python
+from azure.storage.blob import BlobClient
+
+from pymayfly import AzureBlobBroker, transaction_scope
+
+broker = AzureBlobBroker(account_url="https://acct.blob.core.windows.net")
+
+with transaction_scope(
+    broker,
+    resource="az://my-container/path/to/object.parquet",
+    action="read",
+) as creds:
+    blob = BlobClient.from_blob_url(creds.token["url"])
+    data = blob.download_blob().readall()
+    ...
+```
+
+`creds.token["url"]` is the full blob URL with the SAS query string appended,
+usable directly with any azure-storage-blob client. `creds.token["sas_token"]` is
+the bare SAS query string for callers that build their own URLs.
+
+Actions map to a `BlobSasPermissions` permission set (`read` -> read,
+`write` -> write + create, `delete` -> delete, `tag` -> tag); any other value
+raises `IPTScopeError`. Credentials expire 15 minutes after issuance (the default
+`ttl=900`). Like AWS STS and GCS, an individual SAS cannot be revoked — revoking
+the user delegation key is account-wide — so `revoke()` is a no-op and the TTL is
+the backstop.
 from google.oauth2.credentials import Credentials
 from google.cloud import storage
 

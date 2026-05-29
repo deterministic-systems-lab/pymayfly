@@ -48,6 +48,10 @@ def __getattr__(name: str) -> object:
         from .providers.aws_sts import AWSSTSBroker
 
         return AWSSTSBroker
+    if name == "AzureBlobBroker":
+        from .providers.azure_blob import AzureBlobBroker
+
+        return AzureBlobBroker
     if name == "GCSBroker":
         from .providers.gcs import GCSBroker
 
@@ -69,6 +73,7 @@ __all__ = [
     "IPTEnforcer",
     # Providers (lazy)
     "AWSSTSBroker",
+    "AzureBlobBroker",
     "GCSBroker",
     # Exceptions
     "IPTError",

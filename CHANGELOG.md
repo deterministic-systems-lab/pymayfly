@@ -6,6 +6,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- `AzureBlobBroker`: Azure Blob Storage provider issuing a short-lived,
+  AAD-signed User Delegation SAS scoped to a single blob. Install with
+  `pip install pymayfly[azure]`.
 - `GCSBroker`: Google Cloud Storage provider issuing downscoped, single-object
   credentials via service-account impersonation plus a Credential Access
   Boundary. Install with `pip install pymayfly[gcp]`.
