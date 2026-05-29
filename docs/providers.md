@@ -2,8 +2,8 @@
 
 Providers issue credentials for one transaction and describe exactly what those
 credentials can touch. The core package defines the contract; provider packages
-or modules adapt that contract to a platform such as AWS STS, Vault, or another
-credential service.
+or modules adapt that contract to a platform such as AWS STS, Azure Blob Storage,
+Google Cloud Storage, or another credential service.
 
 ## The IdentityBroker Contract
 
@@ -67,18 +67,11 @@ The built-in `AzureBlobBroker` issues an AAD-signed User Delegation SAS scoped t
 a single blob. It obtains a user delegation key from the blob service and then
 calls `generate_blob_sas(...)` to mint a SAS pinned to one container/blob, one
 permission set, and a short expiry.
-## GCS Provider
-
-The built-in `GCSBroker` issues a downscoped Google Cloud Storage access token
-scoped to a single object. It impersonates a service account (setting the token
-TTL) and then applies a Credential Access Boundary pinned to one object and one
-role.
 
 Install it with:
 
 ```bash
 pip install pymayfly[azure]
-pip install pymayfly[gcp]
 ```
 
 Example:
@@ -110,6 +103,23 @@ raises `IPTScopeError`. Credentials expire 15 minutes after issuance (the defaul
 `ttl=900`). Like AWS STS and GCS, an individual SAS cannot be revoked — revoking
 the user delegation key is account-wide — so `revoke()` is a no-op and the TTL is
 the backstop.
+
+## GCS Provider
+
+The built-in `GCSBroker` issues a downscoped Google Cloud Storage access token
+scoped to a single object. It impersonates a service account (setting the token
+TTL) and then applies a Credential Access Boundary pinned to one object and one
+role.
+
+Install it with:
+
+```bash
+pip install pymayfly[gcp]
+```
+
+Example:
+
+```python
 from google.oauth2.credentials import Credentials
 from google.cloud import storage
 
