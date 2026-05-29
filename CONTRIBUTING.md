@@ -14,7 +14,9 @@ cd pymayfly
 python -m pip install -e ".[dev]"
 ```
 
-To include the AWS provider dependency:
+To include a provider's dependencies, add the matching extra. The available
+provider extras are `aws`, `gcp`, and `azure`. For example, to include the AWS
+provider dependency:
 
 ```bash
 python -m pip install -e ".[aws,dev]"

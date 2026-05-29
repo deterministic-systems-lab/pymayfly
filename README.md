@@ -27,6 +27,7 @@ IPT model:           compromised key → single S3 object key (now deleted)
 
 ```bash
 pip install pymayfly[aws]     # AWS STS backend (FedRAMP-suitable)
+pip install pymayfly[azure]   # Azure Blob backend (AAD User Delegation SAS)
 pip install pymayfly[gcp]     # GCS backend (impersonation + downscoped tokens)
 pip install pymayfly          # core only — bring your own provider
 ```
@@ -89,8 +90,9 @@ with transaction_scope(
 
 | Provider | Install | Platform | Revocation | Regulated Use |
 |---|---|---|---|---|
-| `AWSSTSBroker` | `pymayfly[aws]` | AWS | TTL only (900s min) | FedRAMP / HIPAA |
-| `GCSBroker` | `pymayfly[gcp]` | GCP / GCS | TTL only | FedRAMP / HIPAA |
+| `AWSSTSBroker` | `pymayfly[aws]` | AWS / S3 | TTL only (900s min) | FedRAMP / HIPAA |
+| `GCSBroker` | `pymayfly[gcp]` | GCP / GCS | TTL only (15 min) | FedRAMP / HIPAA |
+| `AzureBlobBroker` | `pymayfly[azure]` | Azure / Blob Storage | TTL only (15 min) | FedRAMP / HIPAA |
 | `VaultBroker` | Planned for 0.2.0 | Any | Explicit | Any |
 | `SupabaseJWTBroker` | Planned for 0.2.0 | Postgres | Blocklist | Dev / test only |
 
@@ -137,8 +139,8 @@ This library implements the Identity-Per-Transaction protocol described in:
 
 Issues and PRs welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Provider contributions especially encouraged — if you implement a Vault, Azure,
-or GCP backend, open a PR. Use the [new provider issue template](.github/ISSUE_TEMPLATE/new_provider.md).
+Provider contributions especially encouraged — if you implement a Vault or
+Supabase backend, open a PR. Use the [new provider issue template](.github/ISSUE_TEMPLATE/new_provider.md).
 
 ## License
 
