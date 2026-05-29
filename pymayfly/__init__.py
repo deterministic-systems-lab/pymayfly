@@ -48,6 +48,10 @@ def __getattr__(name: str) -> object:
         from .providers.aws_sts import AWSSTSBroker
 
         return AWSSTSBroker
+    if name == "GCSBroker":
+        from .providers.gcs import GCSBroker
+
+        return GCSBroker
     raise AttributeError(f"module 'pymayfly' has no attribute {name!r}")
 
 
@@ -65,6 +69,7 @@ __all__ = [
     "IPTEnforcer",
     # Providers (lazy)
     "AWSSTSBroker",
+    "GCSBroker",
     # Exceptions
     "IPTError",
     "IPTBrokerError",

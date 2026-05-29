@@ -3,6 +3,7 @@ Identity broker interface for the Identity-Per-Transaction protocol.
 
 Every provider must implement IdentityBroker. The library ships with:
   - AWSSTSBroker (pymayfly[aws])
+  - GCSBroker (pymayfly[gcp])
 
 Planned providers:
   - VaultBroker
