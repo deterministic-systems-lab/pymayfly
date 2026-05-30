@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pymayfly"
-version = "0.2.0rc1"
+version = "0.2.0"
 description = "Identity-Per-Transaction: ephemeral, transaction-scoped credentials for regulated data pipelines"
 readme = "README.md"
 license = "Apache-2.0"

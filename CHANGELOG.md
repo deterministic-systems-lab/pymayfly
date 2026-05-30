@@ -5,6 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-29
+
 ### Added
 - `AzureBlobBroker`: Azure Blob Storage provider issuing a short-lived,
   AAD-signed User Delegation SAS scoped to a single blob. Install with
