@@ -26,6 +26,9 @@ Research::
     IEEE BigDataSecurity 2026.
 """
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _version
+
 from .core.audit import AuditLedger, ConsoleAuditLedger, FileAuditLedger
 from .core.broker import EphemeralCredential, IdentityBroker
 from .core.enforce import IPTEnforcer, ipt_handler
@@ -83,6 +86,9 @@ __all__ = [
     "IPTAuditError",
 ]
 
-__version__ = "0.1.0"
+try:
+    __version__ = _version("pymayfly")
+except PackageNotFoundError:  # running from a source tree without an install
+    __version__ = "0.0.0+unknown"
 __author__ = "Tristan McKinnon"
 __license__ = "Apache-2.0"
